@@ -1,0 +1,11 @@
+{
+  "name": "golangci-lint",
+  "description": "Fast linters Runner for Go",
+  "languages": ["Go"],
+  "maintainer": {
+    "name": "Victor Gama",
+    "email": "victor.gama@gympass.com"
+  }
+  "version": "da5a2077",
+  "spec_version": "0.0.1"
+}
