@@ -1,0 +1,18 @@
+#!/usr/bin/env ruby
+
+$:.unshift(
+  File.expand_path(File.join(File.dirname(__FILE__), "../lib"))
+)
+
+require 'cc/engine/golangci'
+
+engine_config =
+  if File.exist?("/config.json")
+    JSON.parse(File.read("/config.json"))
+  elsif File.exist?("/code/config.json")
+    JSON.parse(File.read("/code/config.json"))
+  else
+    {}
+  end
+
+CC::Engine::Golangci.new(engine_config).run

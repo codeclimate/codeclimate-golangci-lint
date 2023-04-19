@@ -1,20 +1,21 @@
-FROM golang:latest AS build
+FROM golang:1.20.3-alpine3.17 AS build
 
 # Install dependencies:
-RUN apt-get update && apt-get -y install curl
-RUN curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b /usr/local/bin v1.45.2
+RUN apk update && apk add curl
+RUN curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b /usr/local/bin v1.52.2
 
-FROM golang:latest
+FROM golang:1.20.3-alpine3.17
 LABEL maintainer="Victor \"Vito\" Gama <victor.gama@gympass.com>"
 
-RUN apt-get update && apt-get -y install build-essential ruby && rm -rf /var/cache/apt/archives /var/lib/apt/lists/*.
+RUN apk update && apk add \
+    ruby && rm -rf /var/cache/apt/archives /var/lib/apt/lists/*.
 
 WORKDIR /usr/src/app/
 
 COPY --from=build /usr/local/bin/golangci-lint /usr/local/bin/golangci-lint
 COPY engine.json /
 
-RUN adduser -u 9000 --shell /bin/false app
+RUN adduser -S -u 9000 --shell /bin/false app
 USER app
 
 COPY . ./
@@ -22,4 +23,4 @@ COPY . ./
 VOLUME /code
 WORKDIR /code
 
-CMD ["/usr/src/app/entrypoint.sh"]
+CMD ["/usr/src/app/bin/codeclimate-golangci-lint"]
